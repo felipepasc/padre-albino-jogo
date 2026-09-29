@@ -2,169 +2,134 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#f6ead8">
-<meta name="description" content="Ajude o Padre Albino a reunir saúde, educação e recursos para erguer as grandes obras de Catanduva. Jogo educativo inspirado em história real.">
 <title>A Missão de Padre Albino — Construindo Catanduva</title>
+<meta name="description" content="Jogo educativo 2D sobre Monsenhor Albino e as obras que ele fundou em Catanduva, SP. Jogue no navegador ou instale no celular.">
+<link rel="icon" href="icon.png" sizes="512x512" type="image/png">
+<link rel="apple-touch-icon" href="jogo/icons/apple-touch-icon.png">
 
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Padre Albino">
+<meta property="og:type" content="website">
+<meta property="og:title" content="A Missão de Padre Albino — Construindo Catanduva">
+<meta property="og:description" content="Jogo educativo 2D sobre Monsenhor Albino e as obras que ele fundou em Catanduva, SP.">
+<meta property="og:image" content="icon.png">
+<meta property="og:locale" content="pt_BR">
 
-<link rel="stylesheet" href="css/style.css">
+<style>
+  @font-face { font-family:'Fraunces'; src:url('jogo/fonts/fraunces-latin.woff2') format('woff2'); font-weight:100 900; font-display:swap; }
+  @font-face { font-family:'Asap'; src:url('jogo/fonts/asap-latin.woff2') format('woff2'); font-weight:100 900; font-display:swap; }
+
+  :root{
+    --paper:#f6ead8; --ink:#2b2018; --blue:#22304f;
+    --terracotta:#c4502c; --gold:#e0a430; --gold-deep:#b07d1a;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ min-height:100%; }
+  body{
+    font-family:'Asap',system-ui,sans-serif; color:var(--ink); background:var(--paper);
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:calc(env(safe-area-inset-top,0px) + 28px) 20px calc(env(safe-area-inset-bottom,0px) + 28px);
+    position:relative; overflow-x:hidden; text-align:center;
+  }
+
+  .rays{
+    position:fixed; top:-60vh; left:50%; width:160vmax; height:160vmax; transform:translateX(-50%);
+    background:repeating-conic-gradient(from 0deg, rgba(196,80,44,.10) 0 9deg, transparent 9deg 18deg);
+    border-radius:50%; animation:spin 90s linear infinite; pointer-events:none; z-index:0;
+  }
+  @keyframes spin{ to{ transform:translateX(-50%) rotate(360deg); } }
+
+  .wrap{ position:relative; z-index:1; max-width:440px; width:100%; display:flex; flex-direction:column; align-items:center; }
+
+  .icon{
+    width:120px; height:120px; border-radius:26px; border:3px solid var(--ink);
+    box-shadow:5px 5px 0 var(--ink); margin-bottom:20px;
+  }
+  .kicker{ font-size:12px; font-weight:700; letter-spacing:.3em; color:var(--terracotta); margin-bottom:4px; }
+  h1{
+    font-family:'Fraunces',Georgia,serif; font-weight:900; font-size:clamp(44px,15vw,68px); line-height:.9;
+    color:var(--blue); text-shadow:3px 3px 0 var(--gold);
+  }
+  .ribbon{
+    margin-top:14px; background:var(--ink); color:var(--paper); font-size:11px; font-weight:700;
+    letter-spacing:.22em; padding:6px 16px; border-radius:3px; transform:rotate(-1.5deg);
+  }
+  .desc{ font-size:14.5px; line-height:1.55; color:#5a4a3a; margin:22px 0 26px; }
+
+  .btn{
+    font-family:'Asap',system-ui,sans-serif; font-size:17px; font-weight:700; padding:16px 22px;
+    border-radius:14px; border:3px solid var(--ink); cursor:pointer; width:100%; max-width:320px;
+    text-decoration:none; color:var(--ink); display:flex; align-items:center; justify-content:center;
+    gap:9px; transition:transform .1s, box-shadow .1s;
+  }
+  .btn-primary{ background:var(--gold); box-shadow:4px 4px 0 var(--ink); }
+  .btn-ghost{ background:var(--paper); box-shadow:3px 3px 0 rgba(43,32,24,.35); margin-top:12px; }
+  .btn:active{ transform:translate(4px,4px); box-shadow:0 0 0 var(--ink); }
+
+  .note{ font-size:12.5px; font-weight:600; color:var(--gold-deep); margin-top:14px; line-height:1.5; }
+
+  .card{
+    text-align:left; background:rgba(43,32,24,.04); border:2px dashed rgba(43,32,24,.25);
+    border-radius:14px; padding:16px 18px; margin-top:26px; width:100%;
+  }
+  .card h2{ font-family:'Fraunces',Georgia,serif; font-size:16px; color:var(--blue); margin-bottom:8px; }
+  .card p{ font-size:13px; line-height:1.65; color:#5a4a3a; }
+  .card ol{ margin:6px 0 0 18px; font-size:13px; line-height:1.7; color:#5a4a3a; }
+  .card a{ color:var(--terracotta); font-weight:700; }
+
+  .credit{ font-size:10.5px; color:rgba(43,32,24,.5); margin-top:26px; line-height:1.6; }
+  .credit a{ color:rgba(43,32,24,.6); }
+
+  @media (prefers-reduced-motion: reduce){ .rays{ animation:none; } }
+</style>
 </head>
 <body>
+  <div class="rays"></div>
 
-<canvas id="game"></canvas>
+  <main class="wrap">
+    <img class="icon" src="icon.png" width="512" height="512" alt="">
+    <p class="kicker">✣ &nbsp;A MISSÃO DE&nbsp; ✣</p>
+    <h1>Padre<br>Albino</h1>
+    <div class="ribbon">★ &nbsp;CONSTRUINDO CATANDUVA&nbsp; ★</div>
 
-<!-- ============ HUD (durante o jogo) ============ -->
-<header id="hud" class="hidden">
-  <div class="hud-row">
-    <div class="phase-tag">
-      <span id="phaseLabel">OBRA 1/5</span>
-      <strong id="phaseName">Hospital Padre Albino</strong>
-    </div>
-    <div class="timer-wrap">
-      <div id="timer">90</div>
-    </div>
-    <button id="pauseBtn" aria-label="Pausar">
-      <svg viewBox="0 0 24 24" width="22" height="22"><rect x="5" y="4" width="5" height="16" rx="1.5" fill="currentColor"/><rect x="14" y="4" width="5" height="16" rx="1.5" fill="currentColor"/></svg>
-    </button>
-  </div>
-  <div class="pills">
-    <div class="pill pill-health" id="pillHealth">
-      <svg viewBox="0 0 24 24" class="pill-ico"><path d="M12 21s-7.5-4.8-9.8-9C.6 8.9 2.1 5 5.6 4.3 7.8 3.9 10 5 12 7.2 14 5 16.2 3.9 18.4 4.3 21.9 5 23.4 8.9 21.8 12c-2.3 4.2-9.8 9-9.8 9z" fill="#c0392b"/></svg>
-      <span class="pill-val" id="vHealth">0/15</span>
-      <div class="pill-bar"><div class="pill-fill" id="bHealth"></div></div>
-    </div>
-    <div class="pill pill-edu" id="pillEdu">
-      <svg viewBox="0 0 24 24" class="pill-ico"><path d="M3 5.5C5.5 4 8.5 4 11 5.8V20c-2.5-1.8-5.5-1.8-8-.3V5.5z" fill="#2e6db4"/><path d="M21 5.5C18.5 4 15.5 4 13 5.8V20c2.5-1.8 5.5-1.8 8-.3V5.5z" fill="#3f83c9"/></svg>
-      <span class="pill-val" id="vEdu">0/5</span>
-      <div class="pill-bar"><div class="pill-fill" id="bEdu"></div></div>
-    </div>
-    <div class="pill pill-funds" id="pillFunds">
-      <svg viewBox="0 0 24 24" class="pill-ico"><circle cx="12" cy="12" r="9" fill="#e0a430"/><circle cx="12" cy="12" r="6.2" fill="none" stroke="#b07d1a" stroke-width="1.6"/><text x="12" y="16.2" text-anchor="middle" font-size="11" font-weight="bold" fill="#7a5510" font-family="Georgia,serif">$</text></svg>
-      <span class="pill-val" id="vFunds">0/15</span>
-      <div class="pill-bar"><div class="pill-fill" id="bFunds"></div></div>
-    </div>
-  </div>
-</header>
+    <p class="desc">
+      Ajude o Padre Albino a reunir saúde, educação e recursos para erguer as
+      grandes obras de Catanduva. Jogo educativo inspirado em história real.
+    </p>
 
-<!-- ============ TELA: TÍTULO ============ -->
-<div id="screenTitle" class="screen show">
-  <div class="sunburst"></div>
-  <div class="title-inner">
-    <p class="kicker reveal r1">✣ &nbsp;A MISSÃO DE&nbsp; ✣</p>
-    <h1 class="game-title reveal r2">Padre<br>Albino</h1>
-    <div class="ribbon reveal r3"><span>★ &nbsp;CONSTRUINDO CATANDUVA&nbsp; ★</span></div>
+    <a class="btn btn-primary" href="jogo/">🎮 &nbsp;Jogar agora</a>
+    <a class="btn btn-ghost" href="https://play.google.com/apps/testing/br.org.padrealbino.missao">🤖 &nbsp;Entrar no teste do Android</a>
+    <p class="note">Grátis, sem anúncios e sem cadastro.<br>Funciona offline depois da primeira vez.</p>
 
-    <div class="portrait reveal r4">
-      <svg viewBox="0 0 140 150" width="150" height="160" aria-hidden="true">
-        <ellipse cx="70" cy="142" rx="42" ry="6" fill="rgba(43,32,24,.18)"/>
-        <path d="M70 62 C 48 62 38 78 34 112 L34 140 L106 140 L106 112 C102 78 92 62 70 62 Z" fill="#22304f"/>
-        <path d="M70 62 C 48 62 38 78 34 112 L34 140 L42 140 L42 110 C45 82 54 66 70 64 Z" fill="rgba(0,0,0,.18)"/>
-        <rect x="60" y="59" width="20" height="11" rx="3" fill="#f6ead8"/>
-        <g stroke="#e0a430" stroke-width="3.4" stroke-linecap="round"><path d="M70 80 v16 M62 86 h16"/></g>
-        <circle cx="70" cy="40" r="22" fill="#e9b98b"/>
-        <path d="M62 48 Q70 55 78 48" stroke="#7a4b2a" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-        <circle cx="61" cy="38" r="2.1" fill="#2b2018"/>
-        <circle cx="79" cy="38" r="2.1" fill="#2b2018"/>
-        <circle cx="61" cy="38" r="6.6" fill="none" stroke="#2b2018" stroke-width="2"/>
-        <circle cx="79" cy="38" r="6.6" fill="none" stroke="#2b2018" stroke-width="2"/>
-        <path d="M67.6 38 h4.8" stroke="#2b2018" stroke-width="2"/>
-        <ellipse cx="70" cy="21" rx="33" ry="7" fill="#1c1610"/>
-        <path d="M54 21 a16 15 0 0 1 32 0 Z" fill="#1c1610"/>
-      </svg>
-    </div>
+    <section class="card">
+      <h2>Instalar no celular</h2>
+      <p>O jogo é um app de verdade — dá pra deixar um ícone na tela inicial sem passar por loja nenhuma:</p>
+      <ol>
+        <li><b>Android:</b> abra <a href="jogo/">Jogar agora</a> e toque em <b>Instalar no aparelho</b>.</li>
+        <li><b>iPhone:</b> abra no Safari, toque em <b>Compartilhar</b> e depois em <b>Adicionar à Tela de Início</b>.</li>
+      </ol>
+    </section>
 
-    <p class="story reveal r5">Catanduva, interior de São Paulo, início do século&nbsp;XX. Um padre chega à cidade com uma missão: <strong>cuidar das pessoas</strong>. Ajude-o a reunir saúde, educação e recursos para erguer as obras que mudaram a história.</p>
+    <section class="card">
+      <h2>Versão da Google Play</h2>
+      <p>
+        O app Android está em <b>fase de teste fechado</b> — por enquanto só quem
+        foi convidado consegue instalar pela Play Store. O botão acima leva à página
+        de participação. Enquanto isso, a versão do navegador é completa e idêntica.
+      </p>
+    </section>
 
-    <div class="title-actions reveal r6">
-      <button id="btnPlay" class="btn btn-primary">⛏ &nbsp;Começar a Missão</button>
-      <button id="btnHow" class="btn btn-ghost">Como jogar</button>
-      <button id="btnInstall" class="btn btn-ghost" hidden>⬇ &nbsp;Instalar no aparelho</button>
-    </div>
-    <p id="installHint" class="best-line reveal r6" hidden>Para instalar: toque em <b>Compartilhar</b> e depois em <b>Adicionar à Tela de Início</b>.</p>
-    <p id="bestLine" class="best-line reveal r6"></p>
-  </div>
-  <p class="credit">Inspirado na história real de Monsenhor Albino · Catanduva, SP</p>
-</div>
+    <p class="credit">
+      Inspirado na história real de Monsenhor Albino · Catanduva, SP<br>
+      <a href="https://felipepasc.github.io/missao-padre-albino/">Política de privacidade</a>
+    </p>
+  </main>
 
-<!-- ============ TELA: COMO JOGAR ============ -->
-<div id="screenHow" class="screen">
-  <div class="card">
-    <h2 class="card-title">Como jogar</h2>
-    <ul class="how-list">
-      <li><span class="how-ico">🕹</span> Toque e arraste em qualquer lugar da tela para mover o Padre Albino. No computador, use as setas ou <b>WASD</b>.</li>
-      <li><span class="how-ico">❤️📚💰</span> Colete <b>saúde</b>, <b>educação</b> e <b>recursos</b> para erguer cada obra antes que o tempo acabe.</li>
-      <li><span class="how-ico">⭐</span> A <b>Estrela da Caridade</b> aparece de tempos em tempos e vale <b>+3 de tudo</b>. Corra!</li>
-      <li><span class="how-ico">⛈</span> Fuja das <b>tempestades</b> — cada encontro custa <b>5 segundos</b> da sua missão.</li>
-      <li><span class="how-ico">⏱</span> Coletar algo que já está completo devolve <b>+1 segundo</b> ao relógio.</li>
-    </ul>
-    <button id="btnHowBack" class="btn btn-primary">Entendi!</button>
-  </div>
-</div>
-
-<!-- ============ TELA: INTRO DA FASE ============ -->
-<div id="screenPhase" class="screen">
-  <div class="card">
-    <p class="card-kicker" id="introLabel">OBRA 1 DE 5</p>
-    <h2 class="card-title" id="introName">Hospital Padre Albino</h2>
-    <p class="card-sub">Reúna para construir:</p>
-    <div class="needs" id="introNeeds"></div>
-    <p class="card-tip" id="introTip"></p>
-    <button id="btnStart" class="btn btn-primary">⛏ &nbsp;Construir!</button>
-  </div>
-</div>
-
-<!-- ============ TELA: OBRA CONCLUÍDA ============ -->
-<div id="screenDone" class="screen">
-  <div class="card card-gold">
-    <p class="card-kicker gold">✦ OBRA CONCLUÍDA ✦</p>
-    <h2 class="card-title" id="doneName">Hospital Padre Albino</h2>
-    <p class="card-blurb" id="doneBlurb"></p>
-    <div class="dots" id="doneDots"></div>
-    <button id="btnNext" class="btn btn-primary">Próxima obra →</button>
-  </div>
-</div>
-
-<!-- ============ TELA: PAUSA ============ -->
-<div id="screenPause" class="screen">
-  <div class="card">
-    <h2 class="card-title">Pausa</h2>
-    <div class="stack">
-      <button id="btnResume" class="btn btn-primary">▶ &nbsp;Continuar</button>
-      <button id="btnRetryPause" class="btn btn-ghost">↺ &nbsp;Recomeçar obra</button>
-      <button id="btnSound" class="btn btn-ghost">🔊 &nbsp;Som: ligado</button>
-      <button id="btnQuit" class="btn btn-ghost">⌂ &nbsp;Voltar ao menu</button>
-    </div>
-  </div>
-</div>
-
-<!-- ============ TELA: FIM (vitória / derrota) ============ -->
-<div id="screenEnd" class="screen">
-  <div class="card" id="endCard">
-    <p class="card-kicker" id="endKicker">✦ ✦ ✦</p>
-    <h2 class="card-title" id="endTitle">Missão Cumprida!</h2>
-    <p class="card-blurb" id="endMsg"></p>
-    <div class="recap" id="endRecap"></div>
-    <div class="stack">
-      <button id="btnRetry" class="btn btn-primary">↺ &nbsp;Tentar de novo</button>
-      <button id="btnMenu" class="btn btn-ghost">⌂ &nbsp;Menu inicial</button>
-    </div>
-  </div>
-</div>
-
-<div id="joyZone"></div>
-<div id="grain"></div>
-
-<script src="js/nipplejs.min.js"></script>
-<script src="js/audio.js"></script>
-<script src="js/game.js"></script>
-<script src="js/pwa.js"></script>
+  <script>
+    // Desfaz o service worker antigo, de quando o jogo morava nesta raiz.
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    }
+  </script>
 </body>
 </html>
